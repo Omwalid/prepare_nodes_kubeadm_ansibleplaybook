@@ -1,0 +1,32 @@
+---
+- name: add apt keys
+  apt_key:
+   url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+   state: present
+ 
+- name: add repository
+  shell: | 
+    cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+    deb http://apt.kubernetes.io/ kubernetes-xenial main
+    EOF
+ 
+- name: install kubeadm kubelet kubectl
+  apt: 
+    name: '{{ item }}'
+    update_cache: yes
+    state: latest
+  loop:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+- name: hold kubeadm kublet kubectl
+  dpkg_selections:
+    name: '{{ item }}'
+    selection: hold
+  loop:
+  - kubelet
+  - kubeadm
+  - kubectl
+
+

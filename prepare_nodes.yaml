@@ -1,0 +1,13 @@
+
+- name: prepare nodes for kubeadm
+  hosts: all
+
+  tasks:
+  - set_fact:
+     user: '{{ ansible_user_id }}'
+  - block:
+     - include: ./tasks/swap.yaml
+     - include: ./tasks/install_tools.yaml
+     - include: ./tasks/install_docker.yaml
+     - include: ./tasks/install_3k.yaml 
+    become: yes
